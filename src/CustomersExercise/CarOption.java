@@ -16,6 +16,7 @@ public class CarOption {
             new CarOption("Radyjko",1200),
             new CarOption("Wycieraczki",100),
             new CarOption("Dywaniki",150)
+            /*dupa*/
     };
 
     {
