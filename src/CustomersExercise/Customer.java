@@ -11,19 +11,27 @@ public class Customer {
     private String surname;
     private Integer age;
     private BigDecimal wage;
+    private List<String> preferences;
     private static Integer counter = 1; // jak tu nie jest static to id dla każdego jest 1!!! Bo chyba main nie może korzystać z tej zmiennnej???
-
     public static Customer[] people = new Customer[]{
-            new Customer("Anna", "Nowak   ", 33, "1200"),
-            new Customer("Beata", "Kowalska", 22, "1200"),
-            new Customer("Marek", " Nowak", 25, "1250"),
-            new Customer("Adam", "Twardowski", 33, "4100"),
-            new Customer("Monika  ", "Kos", 25, "2500"),
-            new Customer("Adam ", "Rudy", 45, "3333"),
-            new Customer("Marek", "Rudy", 15, 2210),
-            new Customer("Adam", "Madej", 15, 3333), // dostajemy dwa typy danych ale żaden nam nie odpowiada
+            new Customer("Anna", "Nowak   ", 33, "1200",
+                    Arrays.asList("Klima","Radyjko","Wycieraczki","Dywaniki:4")),
+            new Customer("Beata", "Kowalska", 22, "1200",
+                    Arrays.asList("Radyjko","Klima","Wycieraczki","Dywaniki:2")),
+            new Customer("Marek", " Nowak", 25, "1250",
+                    Arrays.asList("Radyjko","Wycieraczki:3","Dywaniki","Klima")),
+            new Customer("Adam", "Twardowski", 33, "4100",
+                    Arrays.asList("Wycieraczki","Klima","Radyjko","Dywaniki")),
+            new Customer("Monika  ", "Kos", 25, "2500",
+                    Arrays.asList("Wycieraczki","Dywaniki","Klima","Radyjko")),
+            new Customer("Adam ", "Rudy", 45, "3333",
+                    Arrays.asList("Dywaniki","Radyjko","Klima","Wycieraczki")),
+            new Customer("Marek", "Rudy", 15, 2210,
+                    Arrays.asList("Klima","Radyjko","Wycieraczki:2","Dywaniki")),
+            new Customer("Adam", "Madej", 15, 3333,
+                    Arrays.asList("Radyjko","Wycieraczki","Klima","Dywaniki")),// dostajemy dwa typy danych ale żaden nam nie odpowiada
     };
-
+    public static Map<Integer,List<String>> mapOfCustomersPreferences = new HashMap<>();
     public static List<Customer> listOfPeople = new ArrayList<>();
     public static Map<Integer, Customer> mapOfPeople = new HashMap<>();
     public static Map<Integer, Customer> mapOfWages = new HashMap<>();
@@ -32,15 +40,16 @@ public class Customer {
         id = counter++;
     }
 
-    public Customer(String name, String surname, Integer age, String wage) {
-        this(name, surname, age, Integer.valueOf(wage)); // w pierwzym konstruktorze zamieniamy Stringa w zarobkach na Integera
+    public Customer(String name, String surname, Integer age, String wage, List<String> preferences) {
+        this(name, surname, age, Integer.valueOf(wage), preferences); // w pierwzym konstruktorze zamieniamy Stringa w zarobkach na Integera
     }
 
-    public Customer(String name, String surname, Integer age, Integer wage) { // w tym knstruktorze zamieniamy Integera na BigDecimal
+    public Customer(String name, String surname, Integer age, Integer wage, List<String> preferences) { // w tym knstruktorze zamieniamy Integera na BigDecimal
         this.name = name.trim();
         this.surname = surname.trim();
         this.age = age;
         this.wage = BigDecimal.valueOf(Integer.valueOf(wage));
+        this.preferences = preferences;
     }
 
     public Integer getId() {
@@ -83,6 +92,14 @@ public class Customer {
         this.wage = wage;
     }
 
+    public List<String> getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(List<String> preferences) {
+        this.preferences = preferences;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -104,6 +121,7 @@ public class Customer {
                 ", surname='" + surname + '\'' +
                 ", age=" + age +
                 ", wage=" + wage +
+                ", preferences=" + preferences +
                 '}';
     }
 }

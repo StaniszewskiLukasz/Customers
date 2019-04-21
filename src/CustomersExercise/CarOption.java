@@ -16,18 +16,24 @@ public class CarOption {
             new CarOption("Radyjko",1200),
             new CarOption("Wycieraczki",100),
             new CarOption("Dywaniki",150)
-            /*dupa*/
+
     };
 
     {
         id=counter++;
     }
 
-    public CarOption(String partsName, String partsPrice){
+   /* public CarOption(String partsName, String partsPrice){
         this(partsName, Integer.valueOf(partsPrice));
+    }*/
+
+    public CarOption(Integer id, String partsName, BigDecimal partsPrice) {
+        this.id = id;
+        this.partsName = partsName;
+        this.partsPrice = partsPrice;
     }
 
-    public CarOption(String partsName,Integer partsPrice){
+    public CarOption(String partsName, Integer partsPrice){
         this.partsName = partsName;
         this.partsPrice = BigDecimal.valueOf(partsPrice);
     }

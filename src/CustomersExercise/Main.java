@@ -3,11 +3,11 @@ package CustomersExercise;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static CustomersExercise.Customer.*;
 
 public class Main {
-
 
 
     public static void main(String[] args) {
@@ -26,15 +26,25 @@ public class Main {
         System.out.println();
         System.out.println("5. Metoda: wagesMapWithStatistics()");
         System.out.println("Drukujemy HashMapę z tabelą ile osób zarabia dana kwotę");
-        System.out.println(wagesMapWithStatistics());
+        System.out.println(wagesMapWithStatistics(listOfPeople));
         System.out.println();
         System.out.println("6. Metoda: mapOfWagesMap()");
         System.out.println("Drukujemy HashMapę mapy <imię,<zarobki,liczba_osób_z_takimi_zarobkami>>");
-        System.out.println(mapOfWagesMap());
+        System.out.println(mapOfWagesMap(listOfPeople));
         System.out.println();
         System.out.println("7. Metoda: mapOfWagesSum()");
         System.out.println("Drukujemy Hashmapę <imię,<suma_zarobków_osób_o_taki_imieniu>>");
-        System.out.println(mapOfWagesSum());
+        System.out.println(mapOfWagesSum(people));
+        System.out.println();
+        System.out.println("8. Metoda: howMuchMoneyCustomerWillMissing()");
+        System.out.println("Drukujemy ile zabraknie poszczególnym klientom do " +
+                "wybrania wszystkich elementów wyposażenia");
+        howMuchMoneyCustomerWillMissing();
+        System.out.println();
+        System.out.println("9. Metoda: populateMapOfPreferences()");
+        System.out.println("Tworzymy mapę preferencji");
+        populateMapOfPreferences(people);
+        printCustomerWithTheBigestRestOfMoney();
 
 
     }
@@ -79,7 +89,7 @@ public class Main {
 
     private static Map<BigDecimal, List<String>> createMapOfPeopleWages(Customer[] table) {
         Map<BigDecimal, List<String>> resultMap = new HashMap<>();
-        for (Customer person : people) {
+        for (Customer person : table) {
             if (resultMap.containsKey(person.getWage())) {
                 List<String> functionalList = resultMap.get(person.getWage());
                 functionalList.add(person.getId() + " " + person.getName().trim() + " " + person.getSurname().trim());
@@ -92,30 +102,30 @@ public class Main {
         return resultMap;
     }
 
-    private static Map<BigDecimal, Integer> wagesMapWithStatistics() {
+    private static Map<BigDecimal, Integer> wagesMapWithStatistics(List<Customer> someList) {
         Map<BigDecimal, Integer> resultMap = new HashMap<>();
-        for (int i = 0; i < listOfPeople.size(); i++) {
+        for (int i = 0; i < someList.size(); i++) {
             int counter = 0;
-            BigDecimal wage = listOfPeople.get(i).getWage();
-            for (int j = 0; j < listOfPeople.size(); j++) {
-                BigDecimal numberOfWage = listOfPeople.get(j).getWage();
+            BigDecimal wage = someList.get(i).getWage();
+            for (int j = 0; j < someList.size(); j++) {
+                BigDecimal numberOfWage = someList.get(j).getWage();
                 if (numberOfWage.equals(wage)) {
                     counter++;
                 }
             }
-            resultMap.put(listOfPeople.get(i).getWage(), counter);
+            resultMap.put(someList.get(i).getWage(), counter);
         }
         return resultMap;
     }
 
 
-    private static Map<String, Map<BigDecimal, Integer>> mapOfWagesMap() {
+    private static Map<String, Map<BigDecimal, Integer>> mapOfWagesMap(List<Customer> someList) {
         Map<String, Map<BigDecimal, Integer>> resultMap = new HashMap<>();
-        for (Customer person : people) {
+        for (Customer person : someList) {
             Integer counter = 0;
             BigDecimal wage = person.getWage();
-            for (int i = 0; i < listOfPeople.size(); i++) {
-                BigDecimal numberOfWage = listOfPeople.get(i).getWage();
+            for (int i = 0; i < someList.size(); i++) {
+                BigDecimal numberOfWage = someList.get(i).getWage();
                 if (numberOfWage.equals(wage)) {
                     counter++;
                 }
@@ -133,9 +143,9 @@ public class Main {
     }
 
 
-    private static Map<String,BigDecimal> mapOfWagesSum() {
-        Map<String,BigDecimal> resultMap = new HashMap<>();
-        for (Customer person : people) {
+    private static Map<String, BigDecimal> mapOfWagesSum(Customer[] table) {
+        Map<String, BigDecimal> resultMap = new HashMap<>();
+        for (Customer person : table) {
             BigDecimal wageFirst = person.getWage();
             if (resultMap.containsKey(person.getName().trim())) {
                 BigDecimal wageSecond = resultMap.get(person.getName().trim());
@@ -145,6 +155,44 @@ public class Main {
             }
         }
         return resultMap;
+    }
+
+    private static void howMuchMoneyCustomerWillMissing() {
+        BigDecimal sum = BigDecimal.ZERO;
+        List<BigDecimal> decimalList = Arrays
+                .stream(CarOption.getItems())
+                .map(CarOption::getPartsPrice)
+                .collect(Collectors.toList());
+
+        for (int i = 0; i < decimalList.size(); i++) {
+            sum = sum.add(decimalList.get(i));
+        }
+
+        for (int i = 0; i < listOfPeople.size(); i++) {
+            BigDecimal howMuchWillMissing = listOfPeople.get(i).getWage().subtract(sum);
+            if (howMuchWillMissing.intValue() < 0) {
+                System.out.println("Klientowi o id: " + listOfPeople.get(i).getId() + " zabraknie " +
+                        "do kupienia wszystkich elementów wyposażenia: " + howMuchWillMissing);
+            } else {
+                System.out.println("Klientowi o id: " + listOfPeople.get(i).getId() + " zostanie " +
+                        "po zakupieniu wszystkich elementów wyposażenia: " + howMuchWillMissing + "zł");
+            }
+        }
+    }
+
+    public static void populateMapOfPreferences(Customer[] table){
+        Map<Integer, List<String>> resultMap = new HashMap<>();
+        for (Customer person : table) {
+            resultMap.put(person.getId(), person.getPreferences());
+        }
+        mapOfCustomersPreferences = resultMap;
+    }
+
+
+    private static void printCustomerWithTheBigestRestOfMoney(){
+        System.out.println(mapOfCustomersPreferences.isEmpty());
+        System.out.println(mapOfCustomersPreferences.size());
+        System.out.println(mapOfCustomersPreferences.get(1));
     }
 
 }
