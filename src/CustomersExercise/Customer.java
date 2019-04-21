@@ -31,7 +31,7 @@ public class Customer {
             new Customer("Adam", "Madej", 15, 3333,
                     Arrays.asList("Radyjko","Wycieraczki","Klima","Dywaniki")),// dostajemy dwa typy danych ale żaden nam nie odpowiada
     };
-    public static Map<Integer,List<String>> mapOfCustomersPreferences = new HashMap<>();
+//    public static Map<Integer,List<String>> mapOfCustomersPreferences = new HashMap<>();
     public static List<Customer> listOfPeople = new ArrayList<>();
     public static Map<Integer, Customer> mapOfPeople = new HashMap<>();
     public static Map<Integer, Customer> mapOfWages = new HashMap<>();

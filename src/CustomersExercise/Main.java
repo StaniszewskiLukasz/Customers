@@ -42,10 +42,18 @@ public class Main {
                 "wybrania wszystkich elementów wyposażenia");
         howMuchMoneyCustomerWillMissing();
         System.out.println();
-        System.out.println("9. Metoda: populateMapOfPreferences()");
-        System.out.println("Tworzymy mapę preferencji");
-        populateMapOfPreferences(people);
-
+        System.out.println("9. Metoda: changeTableToListOfOptions()");
+        System.out.println("Zmieniamy tablicę na listę opcji do kupienia");
+        changeTableToListOfOptions();
+        System.out.println();
+        System.out.println("10. Metoda: mapOfCarOptionsCreate()");
+        System.out.println("Tworzymy mapę z listą opcji do kupienia");
+        mapOfCarOptionsCreate(CarOption.listOfOptions);
+        System.out.println();
+        System.out.println("11. Metoda: whichCarOptionCustomerCanBuy()");
+        System.out.println("Wyświetlamy wyposażenie na które stać poszczególnych klientów ");
+        whichCarOptionCustomerCanBuy();
+        System.out.println();
 
 
     }
@@ -75,9 +83,15 @@ public class Main {
         }
     }
 
-    private static void mapOfCarOptionsCreate(){
+    private static void changeTableToListOfOptions() {
+        CarOption.listOfOptions.addAll(Arrays.asList(CarOption.getItems()));
+    }
 
-
+    private static Map mapOfCarOptionsCreate(List<CarOption> list) {
+        for (CarOption carOption : list) {
+            CarOption.mapOfCarOptions.put(carOption.getPartsName(), carOption.getPartsPrice());
+        }
+        return CarOption.mapOfCarOptions;
     }
 
     private static List<String> createListNamesAndSurnamesFromTable(Customer[] table) {
@@ -186,30 +200,38 @@ public class Main {
         }
     }
 
-    public static void populateMapOfPreferences(Customer[] table){
+   /* public static void populateMapOfPreferences(Customer[] table) {
         Map<Integer, List<String>> resultMap = new HashMap<>();
         for (Customer person : table) {
             resultMap.put(person.getId(), person.getPreferences());
         }
         mapOfCustomersPreferences = resultMap;
-    }
+    }*/
 
-    private static void whichCarOptionCustomerCanBuy(){
-        for (int i = 1; i < mapOfCustomersPreferences.size(); i++) {
-//            BigDecimal customerWage = listOfPeople.get(i).getWage();
-            List<String> preferencesList = mapOfCustomersPreferences.get(i);
-            for (int j = 0; j < preferencesList.size(); j++) {
-                if(preferencesList.get(j).equals())
+    private static void whichCarOptionCustomerCanBuy() {
+        BigDecimal wage = BigDecimal.ZERO;
+        for (int i = 0; i < mapOfPeople.size(); i++) {
+            BigDecimal wageOfCustomer = mapOfPeople.get(i).getWage();
+            wage = wageOfCustomer;
+            List<String> preferencesList = mapOfPeople.get(i).getPreferences();
+            for (String s : preferencesList) {
+                if (CarOption.mapOfCarOptions.containsKey(s)) {
+                    if (wage.intValue() - CarOption.mapOfCarOptions.get(s).intValue() > 0) {
+                        wage = wage.subtract(CarOption.mapOfCarOptions.get(s));
+                        System.out.println("Klient o id: " + mapOfPeople.get(i) + " może kupić " + CarOption.mapOfCarOptions.keySet());
+                    } else {
+                        System.out.println("Klienta o id: " + mapOfPeople.get(i) + " nie stać już na tą opcję.");
+                    }
+                }
             }
 
 
         }
 
-
     }
 
 
-    private static void printCustomerWithTheBigestRestOfMoney(){
+    private static void printCustomerWithTheBigestRestOfMoney() {
 
     }
 
