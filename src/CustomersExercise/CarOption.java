@@ -1,6 +1,8 @@
 package CustomersExercise;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class CarOption {
@@ -8,8 +10,7 @@ public class CarOption {
     private String partsName;
     private BigDecimal partsPrice;
     public static Integer counter=1;
-
-
+    Map<BigDecimal,String> mapOfCarOptions= new HashMap<>();
 
     public static CarOption[] items = new CarOption[]{
             new CarOption("Klima",1500),
@@ -27,10 +28,10 @@ public class CarOption {
         this(partsName, Integer.valueOf(partsPrice));
     }*/
 
-    public CarOption(Integer id, String partsName, BigDecimal partsPrice) {
+    public CarOption(Integer id, String partsName, Integer partsPrice) {
         this.id = id;
         this.partsName = partsName;
-        this.partsPrice = partsPrice;
+        this.partsPrice = BigDecimal.valueOf(partsPrice);
     }
 
     public CarOption(String partsName, Integer partsPrice){

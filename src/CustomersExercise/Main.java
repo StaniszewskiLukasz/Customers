@@ -2,6 +2,7 @@ package CustomersExercise;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -44,7 +45,7 @@ public class Main {
         System.out.println("9. Metoda: populateMapOfPreferences()");
         System.out.println("Tworzymy mapę preferencji");
         populateMapOfPreferences(people);
-        printCustomerWithTheBigestRestOfMoney();
+
 
 
     }
@@ -72,6 +73,11 @@ public class Main {
             System.out.println(listOfPeople.get(i));
 //        System.out.println(listOfPeople);  // tak nie zadziała terzeba odwołać się do indeksu i przeiterować
         }
+    }
+
+    private static void mapOfCarOptionsCreate(){
+
+
     }
 
     private static List<String> createListNamesAndSurnamesFromTable(Customer[] table) {
@@ -188,11 +194,23 @@ public class Main {
         mapOfCustomersPreferences = resultMap;
     }
 
+    private static void whichCarOptionCustomerCanBuy(){
+        for (int i = 1; i < mapOfCustomersPreferences.size(); i++) {
+//            BigDecimal customerWage = listOfPeople.get(i).getWage();
+            List<String> preferencesList = mapOfCustomersPreferences.get(i);
+            for (int j = 0; j < preferencesList.size(); j++) {
+                if(preferencesList.get(j).equals())
+            }
+
+
+        }
+
+
+    }
+
 
     private static void printCustomerWithTheBigestRestOfMoney(){
-        System.out.println(mapOfCustomersPreferences.isEmpty());
-        System.out.println(mapOfCustomersPreferences.size());
-        System.out.println(mapOfCustomersPreferences.get(1));
+
     }
 
 }
