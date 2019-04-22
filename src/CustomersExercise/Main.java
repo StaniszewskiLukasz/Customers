@@ -1,15 +1,19 @@
 package CustomersExercise;
 
+import sun.misc.Contended;
+
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static CustomersExercise.Customer.*;
 
-public class Main {
 
+public class Main {
 
     public static void main(String[] args) {
         System.out.println("1. Metoda: changeTableTolistOfPeople()");
@@ -51,7 +55,7 @@ public class Main {
         mapOfCarOptionsCreate(CarOption.listOfOptions);
         System.out.println();
         System.out.println("11. Metoda: whichCarOptionCustomerCanBuy()");
-        System.out.println("Wyświetlamy wyposażenie na które stać poszczególnych klientów ");
+        System.out.println("Wyświetlamy wyposażenie na które stać poszczególnych klientów(według kolejności ich preferencji");
         whichCarOptionCustomerCanBuy();
         System.out.println();
 
@@ -209,25 +213,46 @@ public class Main {
     }*/
 
     private static void whichCarOptionCustomerCanBuy() {
-        BigDecimal wage = BigDecimal.ZERO;
-        for (int i = 0; i < mapOfPeople.size(); i++) {
-            BigDecimal wageOfCustomer = mapOfPeople.get(i).getWage();
-            wage = wageOfCustomer;
-            List<String> preferencesList = mapOfPeople.get(i).getPreferences();
-            for (String s : preferencesList) {
-                if (CarOption.mapOfCarOptions.containsKey(s)) {
-                    if (wage.intValue() - CarOption.mapOfCarOptions.get(s).intValue() > 0) {
-                        wage = wage.subtract(CarOption.mapOfCarOptions.get(s));
-                        System.out.println("Klient o id: " + mapOfPeople.get(i) + " może kupić " + CarOption.mapOfCarOptions.keySet());
+        for (int i = 1; i <= mapOfPeople.size(); i++) {// iterujemy listę ludzi i pobieramy po kolej klientów
+            BigDecimal wage= mapOfPeople.get(i).getWage(); // z profilu konkretnego klienta pobieramy zarobki
+            List<String> preferencesList = mapOfPeople.get(i).getPreferences(); // z profilu konkretnego klienta pobieramy listę preferencji
+            List<String> improvePreferencesList = improvePreferencesList(preferencesList); // poprawiamy listę by nie zawierała liczb a odpowiednią liczbą elementów
+            System.out.println("dwukujemy naszą poprawioną listę" + improvePreferencesList); //USUNĄC, TYLKO DO TESTU
+            for (int j = 0; j <improvePreferencesList.size() ; j++) { // iterujemy listę preferencji
+                if (CarOption.mapOfCarOptions.containsKey(improvePreferencesList.get(j))) { // porównujemy listę preferencji z dostępnymi opcjami wyposażenia
+                    if (wage.intValue() - CarOption.mapOfCarOptions.get(improvePreferencesList.get(j)).intValue() >= 0) {
+                        wage = wage.subtract(CarOption.mapOfCarOptions.get(improvePreferencesList.get(j)));
+                        System.out.println("Klient o id: " + mapOfPeople.get(i).getId() + " może kupić " + improvePreferencesList.get(j));
                     } else {
-                        System.out.println("Klienta o id: " + mapOfPeople.get(i) + " nie stać już na tą opcję.");
+                        System.out.println("Klienta o id: " + mapOfPeople.get(i).getId() + " nie stać na " + improvePreferencesList.get(j) + ".");
+
                     }
                 }
             }
-
-
         }
+    }
 
+    private static List improvePreferencesList(List<String> preferencesList) {
+        String oneOptionOfPreferencesList = null;
+        String number = null;
+        int numberOfRepetition = 0;
+        int numberOfIndex = 0;
+        for (int i = 0; i < preferencesList.size(); i++) {
+            Pattern pattern = Pattern.compile("(.*)\\:(\\d)");
+            Matcher matcher = pattern.matcher(preferencesList.get(i));
+            if (matcher.matches()) {
+                oneOptionOfPreferencesList = matcher.group(1);
+                number = matcher.group(2);
+                numberOfRepetition = Integer.parseInt(number);
+                numberOfIndex = i;
+            }
+        }
+        List<String> improvePreferencesList = new ArrayList<>(preferencesList);
+        improvePreferencesList.remove(numberOfIndex);
+        for (int j = 0; j < numberOfRepetition; j++) {
+            improvePreferencesList.add(oneOptionOfPreferencesList);
+        }
+        return improvePreferencesList;
     }
 
 
