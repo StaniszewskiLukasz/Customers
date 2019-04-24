@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.*;
 
 
-
 public class Customer {
     private Integer id;
     private String name;
@@ -15,26 +14,26 @@ public class Customer {
     private static Integer counter = 1; // jak tu nie jest static to id dla każdego jest 1!!! Bo chyba main nie może korzystać z tej zmiennnej???
     public static Customer[] people = new Customer[]{
             new Customer("Anna", "Nowak   ", 33, "1200",
-                    Arrays.asList("Klima","Radyjko","Wycieraczki","Dywaniki:4")),
+                    Arrays.asList("Klima", "Radyjko", "Wycieraczki", "Dywaniki:4")),
             new Customer("Beata", "Kowalska", 22, "1200",
-                    Arrays.asList("Radyjko","Klima","Wycieraczki","Dywaniki:2")),
+                    Arrays.asList("Radyjko", "Klima", "Wycieraczki", "Dywaniki:2")),
             new Customer("Marek", " Nowak", 25, "1250",
-                    Arrays.asList("Radyjko","Wycieraczki:3","Dywaniki","Klima")),
+                    Arrays.asList("Radyjko", "Wycieraczki:3", "Dywaniki", "Klima")),
             new Customer("Adam", "Twardowski", 33, "4100",
-                    Arrays.asList("Wycieraczki","Klima","Radyjko","Dywaniki")),
+                    Arrays.asList("Wycieraczki", "Klima", "Radyjko", "Dywaniki")),
             new Customer("Monika  ", "Kos", 25, "2500",
-                    Arrays.asList("Wycieraczki","Dywaniki","Klima","Radyjko")),
+                    Arrays.asList("Wycieraczki", "Dywaniki", "Klima", "Radyjko")),
             new Customer("Adam ", "Rudy", 45, "3333",
-                    Arrays.asList("Dywaniki","Radyjko","Klima","Wycieraczki")),
+                    Arrays.asList("Dywaniki", "Radyjko", "Klima", "Wycieraczki")),
             new Customer("Marek", "Rudy", 15, 2210,
-                    Arrays.asList("Klima","Radyjko","Wycieraczki:2","Dywaniki")),
+                    Arrays.asList("Klima", "Radyjko", "Wycieraczki:2", "Dywaniki")),
             new Customer("Adam", "Madej", 15, 3333,
-                    Arrays.asList("Radyjko","Wycieraczki","Klima","Dywaniki")),// dostajemy dwa typy danych ale żaden nam nie odpowiada
+                    Arrays.asList("Radyjko", "Wycieraczki", "Klima", "Dywaniki")),// dostajemy dwa typy danych ale żaden nam nie odpowiada
     };
-//    public static Map<Integer,List<String>> mapOfCustomersPreferences = new HashMap<>();
     public static List<Customer> listOfPeople = new ArrayList<>();
     public static Map<Integer, Customer> mapOfPeople = new HashMap<>();
     public static Map<Integer, Customer> mapOfWages = new HashMap<>();
+    public static List<String> theRichestCustomer = new ArrayList<>();
 
     {
         id = counter++;
