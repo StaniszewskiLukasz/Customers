@@ -1,17 +1,20 @@
 package CustomersExercise;
 
 
-
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import static CustomersExercise.Customer.*;
 
 
 public class Main {
-    public static List<String> theRichestCustomer = new ArrayList<>();
+    private static List<String> theRichestCustomer = new ArrayList<>();
+    private static Map<Integer, BigDecimal> mapOfRestOfMoney = new HashMap<>();
+
     public static void main(String[] args) {
         System.out.println("1. Metoda: changeTableTolistOfPeople()");
         changeTableTolistOfPeople();
@@ -57,7 +60,7 @@ public class Main {
         System.out.println();
         System.out.println("12. Metoda: printCustomerWithTheBigestRestOfMoney()");
         System.out.println("Wyświetlamy klienta, którego stać na wszystkie elementy i zostanie mu najwięcej pięniędzy");
-        printCustomerWithTheBigestRestOfMoney();
+        whoIsTheRichestCustomer(mapOfRestOfMoney);
         System.out.println();
 
 
@@ -184,17 +187,17 @@ public class Main {
 
     private static void howMuchMoneyCustomerWillMissing() {
         BigDecimal sum = BigDecimal.ZERO;
-        List<BigDecimal> decimalList = Arrays
+        List<BigDecimal> decimalList = Arrays //tworzymy listę cen wyposażenia
                 .stream(CarOption.getItems())
                 .map(CarOption::getPartsPrice)
                 .collect(Collectors.toList());
 
         for (int i = 0; i < decimalList.size(); i++) {
-            sum = sum.add(decimalList.get(i));
+            sum = sum.add(decimalList.get(i)); //sumujemy ile kosztują wszystkie dostępne opcję wyposażenia
         }
 
         for (int i = 0; i < listOfPeople.size(); i++) {
-            BigDecimal howMuchWillMissing = listOfPeople.get(i).getWage().subtract(sum);
+            BigDecimal howMuchWillMissing = listOfPeople.get(i).getWage().subtract(sum); // od zarobków odejmujemy sumę cen wszystkich opcji wyposażenia
             if (howMuchWillMissing.intValue() < 0) {
                 System.out.println("Klientowi o id: " + listOfPeople.get(i).getId() + " zabraknie " +
                         "do kupienia wszystkich elementów wyposażenia: " + howMuchWillMissing);
@@ -205,19 +208,11 @@ public class Main {
         }
     }
 
-   /* public static void populateMapOfPreferences(Customer[] table) {
-        Map<Integer, List<String>> resultMap = new HashMap<>();
-        for (Customer person : table) {
-            resultMap.put(person.getId(), person.getPreferences());
-        }
-        mapOfCustomersPreferences = resultMap;
-    }*/
-
     private static void whichCarOptionCustomerCanBuy() {
-        for (int i = 1; i <= mapOfPeople.size(); i++) {// iterujemy listę ludzi i pobieramy po kolej klientów
+        for (int i = 1; i <= mapOfPeople.size(); i++) {// iterujemy mapę ludzi i pobieramy po kolej klientów
             BigDecimal wage = mapOfPeople.get(i).getWage(); // z profilu konkretnego klienta pobieramy zarobki
             List<String> preferencesList = mapOfPeople.get(i).getPreferences(); // z profilu konkretnego klienta pobieramy listę preferencji
-            List<String> improvePreferencesList = improvePreferencesList(preferencesList); // poprawiamy listę by nie zawierała liczb a odpowiednią liczbą elementów
+            List<String> improvePreferencesList = improvePreferencesList(preferencesList); // poprawiamy listę preferencji by nie zawierała liczb a odpowiednią liczbą elementów
             goShopping(i, wage, improvePreferencesList);
         }
     }
@@ -228,7 +223,7 @@ public class Main {
                 if (wage.intValue() - CarOption.mapOfCarOptions.get(improvePreferencesList.get(j)).intValue() >= 0) { // patrzymy czy zarobki pozwolą na zakup
                     wage = wage.subtract(CarOption.mapOfCarOptions.get(improvePreferencesList.get(j))); // jeśli tak od pensji odejmujemy koszt wyposażenia
                     System.out.println("Klient o id: " + mapOfPeople.get(i).getId() + " może kupić " + improvePreferencesList.get(j)); // wyświetlamy
-                    whoIsTheRichestCustomer(i, wage, improvePreferencesList, j);
+                    createMapTheRichestCustomers(i, wage, improvePreferencesList, j);
                 } else { // jeśli pensja poczatkowa lub po zakupie wcześniejszych opcji jest za niska na kolejny zakup kończymy dalsze zakupy
                     System.out.println("Klienta o id: " + mapOfPeople.get(i).getId() + " nie stać na " + improvePreferencesList.get(j) + ".");
                     j = improvePreferencesList.size();
@@ -237,18 +232,28 @@ public class Main {
         }
     }
 
-    private static void whoIsTheRichestCustomer(int i, BigDecimal wage, List<String> improvePreferencesList, int j) {
-        int customerIdWithLotOfMoney = 0;
-        int secondCustomerIdWithLotOfMoney = 0;
-        BigDecimal wageOfCustomerWithLotOfMoney = BigDecimal.ZERO;
-        if (j == improvePreferencesList.size() - 1) {
-            if (wage.intValue() > wageOfCustomerWithLotOfMoney.intValue()) {
+    private static void createMapTheRichestCustomers(int i, BigDecimal wage, List<String> improvePreferencesList, int j) {
+        //        int customerIdWithLotOfMoney = 0;
+
+        // to całe wyszarzenie było pierwszą wersją metody i zastąpiłem to
+        //DWIEMA linijkami!!!!!!
+
+//        int secondCustomerIdWithLotOfMoney = 0;
+//        BigDecimal wageOfCustomerWithLotOfMoney = BigDecimal.ZERO;
+        if (j == improvePreferencesList.size() - 1) { // sprawdzamy czy dany klient kupił wszystkie elementy wyposażenia
+            mapOfRestOfMoney.put(mapOfPeople.get(i).getId(), wage);
+//            mapOfRestOfMoney.entrySet().stream().sorted().
+//            Collections.max(mapOfRestOfMoney.values().stream().max());
+
+            //---------------------do poprawki---------------------------//
+      /*      if (wage.intValue() > wageOfCustomerWithLotOfMoney.intValue()) {
                 wageOfCustomerWithLotOfMoney = wage;
                 customerIdWithLotOfMoney = mapOfPeople.get(i).getId();
             } else if (wage.intValue() == wageOfCustomerWithLotOfMoney.intValue()) {
                 secondCustomerIdWithLotOfMoney = mapOfPeople.get(i).getId();
             }
-            if(mapOfPeople.size()==i) {
+            //------------------koniec poprawki-------------------------------------------//
+            if (mapOfPeople.size() == i) {
                 if (secondCustomerIdWithLotOfMoney > 0) {
                     theRichestCustomer.add("Klienci: " + mapOfPeople.get(customerIdWithLotOfMoney)
                             + " i " + mapOfPeople.get(secondCustomerIdWithLotOfMoney)
@@ -259,8 +264,13 @@ public class Main {
                             + mapOfPeople.get(customerIdWithLotOfMoney) + " i zostało mu "
                             + wageOfCustomerWithLotOfMoney + "zł");
                 }
-            }
+            }*/
         }
+    }
+
+    private static void whoIsTheRichestCustomer(Map<Integer, BigDecimal> mapOfRestOfMoney) {
+        Map.Entry<Integer, BigDecimal> max = Collections.max(mapOfRestOfMoney.entrySet(), Comparator.comparing(Map.Entry::getValue));
+        System.out.println("Najbogatszy jest klient z id: " + max.getKey() + " i zostału mu " + max.getValue());
     }
 
     private static List improvePreferencesList(List<String> preferencesList) {
@@ -272,7 +282,7 @@ public class Main {
             Pattern pattern = Pattern.compile("(.*)\\:(\\d)"); //oddzielamy liczbę od nazwy wyposażenia
             Matcher matcher = pattern.matcher(preferencesList.get(i));
             if (matcher.matches()) { //sprawdzamy czy dla danego elementu na liścię regex działą
-                oneOptionOfPreferencesList = matcher.group(1); // przypisujemy do zmiennej nazwę be liczby
+                oneOptionOfPreferencesList = matcher.group(1); // przypisujemy do zmiennej nazwę bez liczby
                 number = matcher.group(2); // przypisujemy do zmiennej liczbę ile razy dane wyposażenie ma być kupione
                 numberOfRepetition = Integer.parseInt(number); // zamieniamy liczbę String na int
                 numberOfIndex = i; //przypisujemy do zmiennej numer indeksu pod którym wystąpiła nazwa połączona z liczbą
@@ -288,9 +298,15 @@ public class Main {
         return improvePreferencesList;// zwracamy poprawiona listę
     }
 
+    private static void customerWillBuyAsMuchAsPossible(){
+        //Collections.sort(CarOption.mapOfCarOptions.values().stream().collect(Collectors.toList()),Comparator.reverseOrder());
+        //powyższe można zastąpić poniższym
+        Map<String,BigDecimal> sortedMapOfCarOptions = new HashMap<>();
+        sortedMapOfCarOptions = CarOption.mapOfCarOptions;
+        sortedMapOfCarOptions.values().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toMap());
+        new ArrayList<>(CarOption.mapOfCarOptions.values()).sort(Comparator.reverseOrder());
 
-    private static void printCustomerWithTheBigestRestOfMoney() {
-        System.out.println(theRichestCustomer);
+
     }
 
 }
