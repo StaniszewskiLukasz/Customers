@@ -62,7 +62,11 @@ public class Main {
         System.out.println("Wyświetlamy klienta, którego stać na wszystkie elementy i zostanie mu najwięcej pięniędzy");
         whoIsTheRichestCustomer(mapOfRestOfMoney);
         System.out.println();
-
+        System.out.println("13. Metoda: customerWillBuyAsMuchAsPossible()");
+        System.out.println("Wyświetl wyposażenie na które stać poszczególnych klientów " +
+                "(należy wybrać jak najwięcej elementów, ale kolejność preferencji nie ma znaczenia)");
+        customerWillBuyAsMuchAsPossible();
+        System.out.println();
 
     }
 
@@ -233,18 +237,15 @@ public class Main {
     }
 
     private static void createMapTheRichestCustomers(int i, BigDecimal wage, List<String> improvePreferencesList, int j) {
-        //        int customerIdWithLotOfMoney = 0;
-
-        // to całe wyszarzenie było pierwszą wersją metody i zastąpiłem to
-        //DWIEMA linijkami!!!!!!
-
-//        int secondCustomerIdWithLotOfMoney = 0;
-//        BigDecimal wageOfCustomerWithLotOfMoney = BigDecimal.ZERO;
         if (j == improvePreferencesList.size() - 1) { // sprawdzamy czy dany klient kupił wszystkie elementy wyposażenia
             mapOfRestOfMoney.put(mapOfPeople.get(i).getId(), wage);
+        //        int customerIdWithLotOfMoney = 0;
+        // to całe wyszarzenie było pierwszą wersją metody i zastąpiłem to
+        //DWIEMA linijkami!!!!!!
+//        int secondCustomerIdWithLotOfMoney = 0;
+//        BigDecimal wageOfCustomerWithLotOfMoney = BigDecimal.ZERO;
 //            mapOfRestOfMoney.entrySet().stream().sorted().
 //            Collections.max(mapOfRestOfMoney.values().stream().max());
-
             //---------------------do poprawki---------------------------//
       /*      if (wage.intValue() > wageOfCustomerWithLotOfMoney.intValue()) {
                 wageOfCustomerWithLotOfMoney = wage;
@@ -258,7 +259,6 @@ public class Main {
                     theRichestCustomer.add("Klienci: " + mapOfPeople.get(customerIdWithLotOfMoney)
                             + " i " + mapOfPeople.get(secondCustomerIdWithLotOfMoney)
                             + " są równie bogaci. Zostało im " + wageOfCustomerWithLotOfMoney + "zł");
-
                 } else {
                     theRichestCustomer.add("Najbogatszy jest klient: "
                             + mapOfPeople.get(customerIdWithLotOfMoney) + " i zostało mu "
@@ -299,13 +299,13 @@ public class Main {
     }
 
     private static void customerWillBuyAsMuchAsPossible(){
-        //Collections.sort(CarOption.mapOfCarOptions.values().stream().collect(Collectors.toList()),Comparator.reverseOrder());
-        //powyższe można zastąpić poniższym
-        Map<String,BigDecimal> sortedMapOfCarOptions = new HashMap<>();
-        sortedMapOfCarOptions = CarOption.mapOfCarOptions;
-        sortedMapOfCarOptions.values().stream().sorted(Comparator.reverseOrder()).collect(Collectors.toMap());
-        new ArrayList<>(CarOption.mapOfCarOptions.values()).sort(Comparator.reverseOrder());
-
+        //to jest kopia metody witchCarOptionCustomerCanBuy z małą zmianą pobiera (inną listę)
+        List<String> optimasedListOfPreferences = Arrays.asList("Wycieraczki:2", "Dywaniki:4", "Radyjko", "Klima");
+        for (int i = 1; i <= mapOfPeople.size(); i++) {
+            BigDecimal wage = mapOfPeople.get(i).getWage();
+            List<String> improvePreferencesList = improvePreferencesList(optimasedListOfPreferences);
+            goShopping(i, wage, improvePreferencesList);
+        }
 
     }
 
